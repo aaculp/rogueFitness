@@ -1,33 +1,52 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-
-import DayBtn from './components/DayBtn'
+import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet } from 'react-native';
 
 const App = () => {
   const [startTime, setStartTime] = useState(null)
   const [endTime, setEndTime] = useState(null)
+  const [nightTime, setNightTime] = useState("PM")
+  const [dayTime, setDayTime] = useState("AM")
 
-  const handleStartTime = (startTime) => {
-    setStartTime(startTime)
+  const handleNightPress = () => {
+    if (nightTime === "PM") {
+      setNightTime("AM")
+    } else {
+      setNightTime("PM")
+    }
   }
 
-  const handleOnPress = () => {
-    console.log(startTime)
-    console.log(endTime)
+  const handleDayPress = () => {
+    if (dayTime === "AM") {
+      setDayTime("PM")
+    } else {
+      setDayTime("AM")
+    }
   }
 
+  const handleSubmit = () => {
+    console.log(startTime, endTime, nightTime, dayTime)
+  }
   return (
     <View style={styles.container}>
+
       <View style={styles.inputContainer}>
         <Text style={{ marginRight: 10, width: 75 }}>Clock In:</Text>
         <TextInput
           style={styles.input}
           placeholder="Start Time!"
-          keyboardType="number-pad"
           value={startTime}
-          onChangeText={handleStartTime}
+          onChangeText={(startTime) => setStartTime(startTime)}
+          keyboardType="number-pad"
+          accessibilityRole={"keyboardkey"}
+          maxLength={2}
+          returnKeyType={"done"}
         />
-        <DayBtn timeOfDay={"PM"} />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleNightPress}
+        >
+          <Text style={{ color: 'red' }}>{nightTime}</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.inputContainer}>
@@ -35,14 +54,22 @@ const App = () => {
         <TextInput
           style={styles.input}
           placeholder="Start Time!"
-          keyboardType="number-pad"
           value={endTime}
           onChangeText={(endTime) => setEndTime(endTime)}
+          keyboardType="number-pad"
+          accessibilityRole={"keyboardkey"}
+          maxLength={2}
+          returnKeyType={"done"}
         />
-        <DayBtn timeOfDay={"AM"} />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleDayPress}
+        >
+          <Text style={{ color: 'red' }}>{dayTime}</Text>
+        </TouchableOpacity>
       </View>
 
-      <Button title="Submit Timecard" onPress={handleOnPress} />
+      <Button title="Submit Timecard" onPress={handleSubmit} />
     </View>
   );
 };
@@ -64,6 +91,18 @@ const styles = StyleSheet.create({
     width: 150,
     borderWidth: 1,
     textAlign: 'center',
+    marginRight: 20
+  },
+  button: {
+    borderColor: 'red',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    color: 'red',
+    padding: 5,
+  },
+  pmBtn: {
+    borderColor: 'blue',
+    color: 'blue'
   }
 })
 

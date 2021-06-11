@@ -1,17 +1,11 @@
 import React, { useState } from 'react'
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
 
-const DayBtn = ({ timeOfDay }) => {
-    const [dayTime, setDayTime] = useState(`${timeOfDay}`)
-
+const DayBtn = ({ timeOfDay, changeTime }) => {
+    const [time, setTime] = useState(`${timeOfDay}`)
     const handleOnPress = () => {
-        if (dayTime === "AM") {
-            setDayTime("PM")
-        }
-
-        if (dayTime === "PM") {
-            setDayTime("AM")
-        }
+        console.log("handleOnPress", timeOfDay)
+        changeTime()
     }
 
     return (
@@ -20,7 +14,7 @@ const DayBtn = ({ timeOfDay }) => {
                 style={styles.amBtn}
                 onPress={handleOnPress}
             >
-                <Text style={{ marginLeft: 10 }}>{dayTime}</Text>
+                <Text style={{ marginLeft: 10 }}>{timeOfDay}</Text>
             </TouchableOpacity>
         </View>
     )
