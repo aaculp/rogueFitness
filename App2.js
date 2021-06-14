@@ -8,8 +8,11 @@ const App = () => {
     const [dayTime, setDayTime] = useState("AM")
     const [errorMessage, setMessage] = useState("")
 
-    let start = JSON.parse(startTime)
-    let end = JSON.parse(endTime)
+    // let start = JSON.parse(startTime)
+    // let end = JSON.parse(endTime)
+
+    let start = startTime !== "" ? start = JSON.parse(startTime) : start = startTime
+    let end = endTime !== "" ? end = JSON.parse(endTime) : end = endTime
 
     const handleStartTime = () => {
         if (start >= 5 && start <= 11) {
@@ -42,30 +45,49 @@ const App = () => {
     }
 
     const handleSubmit = () => {
-        let endShift = end > 1 && end < 4 ? endShift = end + 12 : endShift = end
-        let totalHours = endShift - start
+        if (end < start) {
+            setMessage("Hey, check your times, somethings wrong!")
+        } else {
+            let startShift = start >= 1 && start <= 4 ? startShift = start + 12 : startShift = start
+            let endShift = end >= 1 && end <= 4 ? endShift = end + 12 : endShift = end
+            let totalHours = Math.abs(endShift - startShift)
 
-        console.log("totalHours", totalHours)
-        // let nightShift = [5, 6, 7, 8]
-        // let bedTimeShift = [9, 10, 11, 12]
-        // let morningShift = [1`, 2, 3, 4]
+            console.log("totalHours", totalHours)
+            // let nightShift = [5, 6, 7, 8]
+            // let bedTimeShift = [9, 10, 11, 12]
+            // let morningShift = [1`, 2, 3, 4]
 
-        let startMorningPay = Math.abs((4 - start) * 16)
-        let startNightPay = Math.abs((8 - start) * 12)
-        let startBedPay = Math.abs((12 - start) * 8)
+            let startMorningPay = Math.abs((4 - start) * 16)
+            let startNightPay = Math.abs((8 - start) * 12)
+            let startBedPay = Math.abs((12 - start) * 8)
 
-        if (start >= 1 && start <= 4) {
-            console.log(1)
-            console.log(startMorningPay)
-        } else if (start >= 5 && start <= 8) {
-            console.log(2)
-            console.log(startNightPay)
-        } else if (start <= 9 && start >= 12) {
-            console.log(3)
-            console.log(startNightPay + startBedPay)
+            let endMorningPay = Math.abs((4 - end) * 16)
+            let endNightPay = Math.abs((8 - end) * 12)
+            let endBedPay = Math.abs((12 - end) * 8)
+
+            if (start >= 1 && start <= 4) {
+                console.log("IF 1")
+                console.log("startMorningPay", startMorningPay)
+            } else if (start >= 5 && start <= 8) {
+                console.log("IF 2")
+                console.log("startNightPay", startNightPay)
+            } else if (start <= 9 && start >= 12) {
+                console.log("IF 3")
+                console.log("startNightPay + startBedPay", startNightPay + startBedPay)
+            }
+
+            if (end >= 1 && end <= 4) {
+                console.log("IF 4")
+                console.log("endMorningPay", endMorningPay)
+            } else if (end >= 5 && end <= 8) {
+                console.log("IF 5")
+                console.log("endNightPay", endNightPay)
+            } else if (end <= 9 && end >= 12) {
+                console.log("IF 6")
+                console.log("endNightPay + endBedPay", endNightPay + endBedPay)
+            }
         }
     }
-
 
     return (
         <View style={styles.container}>
@@ -76,6 +98,7 @@ const App = () => {
                     style={styles.input}
                     placeholder="Start Time!"
                     value={startTime}
+                    onChange={(startTime) => setStartTime(startTime)}
                     onChangeText={(startTime) => setStartTime(startTime)}
                     keyboardType="numeric"
                     accessibilityRole={"keyboardkey"}
@@ -94,6 +117,7 @@ const App = () => {
                     style={styles.input}
                     placeholder="Start Time!"
                     value={endTime}
+                    onChange={(endTime) => setEndTime(endTime)}
                     onChangeText={(endTime) => setEndTime(endTime)}
                     keyboardType="numeric"
                     accessibilityRole={"keyboardkey"}
