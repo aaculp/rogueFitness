@@ -6,6 +6,8 @@ const App = () => {
   const [endTime, setEndTime] = useState(null)
   const [nightTime, setNightTime] = useState("PM")
   const [dayTime, setDayTime] = useState("AM")
+  const [errorMessage, setMessage] = useState("")
+  const [totalPay, setTotalPay] = useState(0)
 
   const handleNightPress = () => {
     if (nightTime === "PM") {
@@ -24,8 +26,29 @@ const App = () => {
   }
 
   const handleSubmit = () => {
-    console.log(startTime, endTime, nightTime, dayTime)
+    setStartTime(JSON.parse(startTime))
+    setEndTime(JSON.parse(endTime))
+
+    console.log(typeof startTime, startTime)
+    console.log(typeof endTime, endTime)
+    console.log(typeof nightTime, nightTime)
+    console.log(typeof dayTime, dayTime)
+    // if (startTime === null || endTime === null) {
+    //   setMessage("Sorry, please enter the time you clocked in and out")
+    // }
+
+    if (startTime < 5 && endTime === "AM") {
+      console.log(typeof endTime, endTime)
+      setMessage("Sorry, you can only clock in after 5PM")
+    }
   }
+
+  const calculatePay = (startTime, endTime) => {
+    console.log(startTime, endTime)
+  }
+
+
+
   return (
     <View style={styles.container}>
 
@@ -36,7 +59,7 @@ const App = () => {
           placeholder="Start Time!"
           value={startTime}
           onChangeText={(startTime) => setStartTime(startTime)}
-          keyboardType="number-pad"
+          keyboardType="numeric"
           accessibilityRole={"keyboardkey"}
           maxLength={2}
           returnKeyType={"done"}
@@ -56,7 +79,7 @@ const App = () => {
           placeholder="Start Time!"
           value={endTime}
           onChangeText={(endTime) => setEndTime(endTime)}
-          keyboardType="number-pad"
+          keyboardType="numeric"
           accessibilityRole={"keyboardkey"}
           maxLength={2}
           returnKeyType={"done"}
@@ -69,6 +92,7 @@ const App = () => {
         </TouchableOpacity>
       </View>
 
+      <Text style={{ color: 'red', marginTop: 20 }}>{errorMessage}</Text>
       <Button title="Submit Timecard" onPress={handleSubmit} />
     </View>
   );
