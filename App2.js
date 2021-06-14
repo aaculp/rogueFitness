@@ -7,61 +7,65 @@ const App = () => {
     const [nightTime, setNightTime] = useState("PM")
     const [dayTime, setDayTime] = useState("AM")
     const [errorMessage, setMessage] = useState("")
-    const [totalPay, setTotalPay] = useState(0)
 
-    const handleNightPress = () => nightTime === "PM" ? setNightTime("AM") : setNightTime("PM")
-    const handleDayPress = () => dayTime === "AM" ? setDayTime("PM") : setDayTime("AM")
+    let start = JSON.parse(startTime)
+    let end = JSON.parse(endTime)
+
+    const handleStartTime = () => {
+        if (start >= 5 && start <= 11) {
+            setNightTime("PM")
+            setMessage("")
+        } else if (start >= 13) {
+            setMessage("You can only clock in after 5PM")
+        } else if (start === 0 || start === null) {
+            setMessage("You can only clock in after 5PM")
+        } else {
+            setNightTime("AM")
+            setMessage("")
+        }
+        return start
+    }
+
+    const handleEndTime = () => {
+        if (end >= 5 && end <= 11) {
+            setDayTime("PM")
+            setMessage("")
+        } else if (end >= 13) {
+            setMessage("You can only work until 4AM")
+        } else if (end === 0 || end === null) {
+            setMessage("You can only work until 4AM")
+        } else {
+            setDayTime("AM")
+            setMessage("")
+        }
+        return end
+    }
 
     const handleSubmit = () => {
-        var start = JSON.parse(startTime)
-        var end = JSON.parse(endTime)
+        let endShift = end > 1 && end < 4 ? endShift = end + 12 : endShift = end
+        let totalHours = endShift - start
 
-        var am = [12, 1, 2, 3, 4]
-        var pm = [5, 6, 7, 8, 9, 10, 11]
+        console.log("totalHours", totalHours)
+        // let nightShift = [5, 6, 7, 8]
+        // let bedTimeShift = [9, 10, 11, 12]
+        // let morningShift = [1`, 2, 3, 4]
 
-        // IF ONE TIME IS EMPTY
-        if (start === null || end === null) {
-            setMessage("Please enter both start / end time!")
-        }
-        // START TIME IS NOT IN PM HOURS
-        else if (!pm.includes(start) && nightTime === "PM") {
-            setMessage("You can only clock in after 5PM!")
-        }
-        // START TIME IS IN PM HOURS
-        else if (pm.includes(start) && nightTime === "PM") {
-            setMessage("Time card submitted!")
-        }
-        // IF START TIME IS NOT IN AM HOURS
-        else if (!am.includes(start) && nightTime === "AM") {
-            setMessage("You can only clock in after 5PM and before 4AM!")
-        }
-        // START TIME IS IN AM HOURS
-        else if (am.includes(start) && nightTime === "AM") {
-            setMessage("Time card submitted!")
-        }
-        // END TIME IS NOT IN PM HOURS
-        else if (!pm.includes(end) && dayTime === "PM") {
-            setMessage("Please check your hours, something seems off")
-        }
-        // END TIME IS IN PM HOURS
-        else if (pm.includes(end) && dayTime === "PM") {
-            setMessage("Time card submitted!")
-        }
-        // END TIME IS NOT IN AM HOURS
-        else if (!am.includes(end) && dayTime === "AM") {
-            setMessage("You can only work until 4AM!")
-        }
-        // END TIME IS IN AM HOURS
-        else if (am.includes(end) && dayTime === "AM") {
-            setMessage("Time card submitted!")
-        }
+        let startMorningPay = Math.abs((4 - start) * 16)
+        let startNightPay = Math.abs((8 - start) * 12)
+        let startBedPay = Math.abs((12 - start) * 8)
 
-        calculatePay(end, nightTime)
+        if (start >= 1 && start <= 4) {
+            console.log(1)
+            console.log(startMorningPay)
+        } else if (start >= 5 && start <= 8) {
+            console.log(2)
+            console.log(startNightPay)
+        } else if (start <= 9 && start >= 12) {
+            console.log(3)
+            console.log(startNightPay + startBedPay)
+        }
     }
 
-    const calculatePay = (time, timeofday) => {
-        console.log("inside calculate pay", time, timeofday)
-    }
 
     return (
         <View style={styles.container}>
@@ -77,8 +81,9 @@ const App = () => {
                     accessibilityRole={"keyboardkey"}
                     maxLength={2}
                     returnKeyType={"done"}
+                    onBlur={handleStartTime}
                 />
-                <TouchableOpacity style={styles.button} onPress={handleNightPress}>
+                <TouchableOpacity style={styles.button} onPress={() => console.log("pressed")}>
                     <Text style={{ color: 'red' }}>{nightTime}</Text>
                 </TouchableOpacity>
             </View>
@@ -94,18 +99,16 @@ const App = () => {
                     accessibilityRole={"keyboardkey"}
                     maxLength={2}
                     returnKeyType={"done"}
+                    onBlur={handleEndTime}
                 />
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={handleDayPress}
-                >
+                <TouchableOpacity style={styles.button} onPress={() => console.log("pressed")}>
                     <Text style={{ color: 'red' }}>{dayTime}</Text>
                 </TouchableOpacity>
             </View>
 
             <Text style={{ color: 'red', marginTop: 20 }}>{errorMessage}</Text>
             <Button title="Submit Timecard" onPress={handleSubmit} />
-        </View>
+        </View >
     );
 };
 
