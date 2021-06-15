@@ -7,6 +7,7 @@ const App = () => {
     const [nightTime, setNightTime] = useState("PM")
     const [dayTime, setDayTime] = useState("AM")
     const [errorMessage, setMessage] = useState("")
+    const [totalPay, setTotalPay] = useState("")
 
     let start = startTime !== "" ? start = JSON.parse(startTime) : start = startTime
     let end = endTime !== "" ? end = JSON.parse(endTime) : end = endTime
@@ -80,8 +81,10 @@ const App = () => {
             checkStartTime(startShift)
             checkEndTime(endShift, startShift)
 
-            console.log(startPay + endPay)
+            setTotalPay(JSON.stringify(startPay + endPay))
+            console.log("totalPay is:", totalPay)
         }
+        return totalPay
     }
 
     return (
@@ -127,6 +130,10 @@ const App = () => {
 
             <Text style={{ color: 'red', marginTop: 20 }}>{errorMessage}</Text>
             <Button title="Submit Timecard" onPress={handleSubmit} />
+
+            <View>
+                <Text>${totalPay}</Text>
+            </View>
         </View >
     );
 };
