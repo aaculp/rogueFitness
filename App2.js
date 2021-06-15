@@ -8,10 +8,6 @@ const App = () => {
     const [dayTime, setDayTime] = useState("AM")
     const [errorMessage, setMessage] = useState("")
 
-    const eveningPay = 12;
-    const nightPay = 8;
-    const earlyMorningPay = 16;
-
     // let start = JSON.parse(startTime)
     // let end = JSON.parse(endTime)
     // have to parse because its returned as a string
@@ -22,6 +18,8 @@ const App = () => {
     let startShift = start >= 1 && start <= 4 ? startShift = start + 12 : startShift = start
     let endShift = end >= 1 && end <= 4 ? endShift = end + 12 : endShift = end
 
+    let startPay;
+    let endPay;
 
     const handleStartTime = () => {
         if (start >= 5 && start <= 11) {
@@ -52,29 +50,27 @@ const App = () => {
     }
 
     const checkStartTime = (startShift) => {
-        let startPay;
+        console.log("first log", startShift)
         if (startShift <= 8) {
             startPay = (8 - startShift) * 12
         } else if (startShift >= 9 && startShift <= 12) {
-            startPay = (12 - startShift) * 8
+            startPay = Math.abs((9 - startShift)) * 8
         } else if (startShift >= 13 && startShift <= 15) {
-            startPay = (15 - startShift) * 16
+            startPay = Math.abs((13 - startShift)) * 16
         }
-
-        console.log(startPay)
+        console.log("last log for startpay", startPay)
     }
 
     const checkEndTime = (endShift) => {
-        let endPay;
+        console.log("first log", endShift)
         if (endShift <= 8) {
             endPay = (8 - endShift) * 12
         } else if (endShift >= 9 && endShift <= 12) {
-            endPay = (12 - endShift) * 8
-        } else if (endShift >= 13 && endShift <= 15) {
-            endPay = (15 - endShift) * 16
+            endPay = Math.abs((9 - endShift)) * 8
+        } else if (endShift >= 13 && endShift <= 16) {
+            endPay = (Math.abs((13 - endShift)) * 16) + 36
         }
-
-        console.log(endPay)
+        console.log("last log for endpay", endPay)
     }
 
     const handleSubmit = () => {
@@ -84,8 +80,10 @@ const App = () => {
             let totalHours = Math.abs(endShift - startShift)
             console.log("totalHours", totalHours)
 
-            checkStartTime(startShift, endShift)
-            checkEndTime(startShift, endShift)
+            checkStartTime(startShift)
+            checkEndTime(endShift)
+
+            console.log(startPay + endPay)
         }
     }
 
