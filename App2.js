@@ -49,7 +49,7 @@ const App = () => {
     const checkStartTime = (startShift) => {
         console.log("first log for startpay", startShift)
         if (startShift <= 8) {
-            startPay = (8 - startShift) * 12
+            startPay = (9 - startShift) * 12
         } else if (startShift >= 9 && startShift <= 12) {
             startPay = Math.abs((9 - startShift)) * 8
         } else if (startShift >= 13 && startShift <= 15) {
@@ -61,11 +61,11 @@ const App = () => {
     const checkEndTime = (endShift) => {
         console.log("first log for endpay", endShift)
         if (endShift <= 8) {
-            endPay = (8 - endShift) * 12
+            endPay = 0
         } else if (endShift >= 9 && endShift <= 12) {
             endPay = Math.abs((9 - endShift)) * 8
         } else if (endShift >= 13 && endShift <= 16) {
-            endPay = (Math.abs((13 - endShift)) * 16) + 36
+            endPay = (Math.abs((13 - endShift)) * 16) + 40
         }
         console.log("last log for endpay", endPay)
     }
