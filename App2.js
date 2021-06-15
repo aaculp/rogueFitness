@@ -7,7 +7,7 @@ const App = () => {
     const [nightTime, setNightTime] = useState("PM")
     const [dayTime, setDayTime] = useState("AM")
     const [errorMessage, setMessage] = useState("")
-    const [totalPay, setTotalPay] = useState("")
+    const [totalPay, setTotalPay] = useState(0)
 
     let start = startTime !== "" ? start = JSON.parse(startTime) : start = startTime
     let end = endTime !== "" ? end = JSON.parse(endTime) : end = endTime
@@ -77,31 +77,41 @@ const App = () => {
 
     const handleNightShift = (startShift, endShift, totalHours) => {
         // this function should only total up hours worked between 5 - 9PM
-        console.log("handleNightShift", startShift, endShift)
-
+        let pay;
         if (startShift >= 9) {
             // started after 9 so DO NOTHING
-            console.log("yes start time is greater than 9")
-        } else if (endShift <= 9) {
-            // this caculates the entire shift because they ended at 9 which is the max time for this payrate
-            // JUST CALC AND END ALL FUNCTIONS
-            console.log("yes 1 else if", (endShift - startShift) * 12)
-            setTotalPay(JSON.stringify((endShift - startShift) * 12))
+            handleMidnightShift(startShift, endShift, totalPay)
         } else if (startShift < 9 && endShift > 9) {
             // they started before end of PAYRATE and ended in the next Payrate, calcu and run next function
-            handleMidnightShift(startShift, endShift, 48)
+            pay = (9 - startShift) * 12
+            setTotalPay(pay)
+            handleMidnightShift(startShift, endShift, pay)
+        } else if (endShift <= 9) {
+            // ENDSHIFT is less that 9, so calculate the totalhours worked and set that as totalPAY
+            pay = totalHours * 12
+            setTotalPay(pay)
         }
     }
 
-    const handleMidnightShift = (startShift, endShift, prevPay) => {
+    const handleMidnightShift = (startShift, endShift, additionalPay) => {
         // this function should only total up hours worked between 9 - 12AM
-        // console.log("handleMidnightShift", startShift, endShift)
-        console.log("landed here")
+        let pay;
+        if (startShift > 12) {
+            //do nothing because were in the next paybracket
+            handleMorningShift(startShift, endShift, totalHours)
+        } else if (endShift < 13) {
+            pay = ((Math.abs(9 - endShift)) * 8) + additionalPay
+            setTotalPay(pay)
+            handleMorningShift(startShift, endShift, additionalPay)
+        }
     }
 
-    const handleMorningShift = (startShift, endShift, totalHours) => {
-        // this function should only total up hours worked between 12 - 4AM
-        // console.log("handleMorningShift", startShift, endShift)
+    const handleMorningShift = (startShift, endShift, additionalPay) => {
+        // this function should only total up hours worked between 12 - 4AM)
+        console.log("HITTING HERE", additionalPay)
+        if (endShift >= 13) {
+            console.log("landed YOOOOOO")
+        }
     }
 
     const handleSubmit = () => {
@@ -165,7 +175,7 @@ const App = () => {
             <Button title="Submit Timecard" onPress={handleSubmit} />
 
             <View>
-                <Text>${totalPay}</Text>
+                <Text>${JSON.stringify(totalPay)}</Text>
             </View>
         </View >
     );
