@@ -47,26 +47,30 @@ const App = () => {
         }
     }
 
-    const checkStartTime = (startShift) => {
+    const checkStartTime = (startShift, endShift, totalHours) => {
+        let checkTime = totalHours + startShift
+        console.log("checkTimeSTARTSHIFT", checkTime)
         console.log("first log for startpay", startShift)
-        if (startShift <= 8) {
-            startPay = (9 - startShift) * 12
-        } else if (startShift >= 9 && startShift <= 12) {
+        if (startShift <= 9) {
+            startPay = Math.abs((5 - startShift)) * 12
+        } else if (startShift >= 10 && startShift <= 12) {
             startPay = Math.abs((9 - startShift)) * 8
         } else if (startShift >= 13 && startShift <= 15) {
-            startPay = Math.abs((13 - startShift)) * 16
+            startPay = Math.abs((12 - startShift)) * 16
         }
         console.log("last log for startpay", startPay)
     }
 
-    const checkEndTime = (endShift) => {
+    const checkEndTime = (startShift, endShift, totalHours) => {
+        let checkTime = totalHours - endShift
+        console.log("checkTimeENDSHIFT", checkTime)
         console.log("first log for endpay", endShift)
-        if (endShift <= 8) {
-            endPay = 0
-        } else if (endShift >= 9 && endShift <= 12) {
-            endPay = Math.abs((9 - endShift)) * 8
+        if (endShift <= 9) {
+            endPay = Math.abs((5 - endShift)) * 12
+        } else if (endShift >= 10 && endShift <= 12) {
+            endPay = (Math.abs((9 - endShift)) * 8) + 48
         } else if (endShift >= 13 && endShift <= 16) {
-            endPay = (Math.abs((13 - endShift)) * 16) + 40
+            endPay = (Math.abs((12 - endShift)) * 16) + 48 + 24
         }
         console.log("last log for endpay", endPay)
     }
@@ -78,8 +82,8 @@ const App = () => {
             let totalHours = Math.abs(endShift - startShift)
             console.log("totalHours", totalHours)
 
-            checkStartTime(startShift)
-            checkEndTime(endShift, startShift)
+            checkStartTime(startShift, endShift, totalHours)
+            checkEndTime(startShift, endShift, totalHours)
 
             setTotalPay(JSON.stringify(startPay + endPay))
             console.log("totalPay is:", totalPay)
