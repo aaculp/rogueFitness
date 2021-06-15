@@ -8,9 +8,6 @@ const App = () => {
     const [dayTime, setDayTime] = useState("AM")
     const [errorMessage, setMessage] = useState("")
 
-    // let start = JSON.parse(startTime)
-    // let end = JSON.parse(endTime)
-    // have to parse because its returned as a string
     let start = startTime !== "" ? start = JSON.parse(startTime) : start = startTime
     let end = endTime !== "" ? end = JSON.parse(endTime) : end = endTime
 
@@ -50,7 +47,7 @@ const App = () => {
     }
 
     const checkStartTime = (startShift) => {
-        console.log("first log", startShift)
+        console.log("first log for startpay", startShift)
         if (startShift <= 8) {
             startPay = (8 - startShift) * 12
         } else if (startShift >= 9 && startShift <= 12) {
@@ -62,7 +59,7 @@ const App = () => {
     }
 
     const checkEndTime = (endShift) => {
-        console.log("first log", endShift)
+        console.log("first log for endpay", endShift)
         if (endShift <= 8) {
             endPay = (8 - endShift) * 12
         } else if (endShift >= 9 && endShift <= 12) {
@@ -81,7 +78,7 @@ const App = () => {
             console.log("totalHours", totalHours)
 
             checkStartTime(startShift)
-            checkEndTime(endShift)
+            checkEndTime(endShift, startShift)
 
             console.log(startPay + endPay)
         }
